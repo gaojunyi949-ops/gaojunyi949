@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>闲鱼币夺大宝 - 交互原型V5</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+
+        body { font-family: 'Noto Sans SC', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .tab-active { border-bottom: 3px solid #f43f5e; color: #f43f5e; font-weight: 900; background: rgba(255,255,255,0.95); }
+
+        .modal { display: none; position: absolute; inset: 0; z-index: 100; background: rgba(0,0,0,0.75); }
+
+        .modal.active { display: flex; }
+
+        .page { display: none; height: 100%; width: 100%; flex-direction: column; }
+
+        .page.active { display: flex; }
+
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+
+        
+
+        /* 进度条小圆点样式 */
+
+        .node-active { background: #f97316; border-color: #ffedd5; box-shadow: 0 0 8px rgba(249, 115, 22, 0.4); }
+
+        .node-inactive { background: #e5e7eb; border-color: #f3f4f6; }
+
+    </style>
+
+</head>
+
+<body class="bg-zinc-900 flex justify-center items-center min-h-screen">
+
+ 
+
+    <div class="w-[390px] h-[844px] bg-white relative shadow-[0_0_60px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col rounded-[55px] border-[10px] border-[#1a1a1a]">
+
+        
+
+        <div class="h-12 w-full flex justify-between items-center px-8 pt-4 text-xs z-[60] pointer-events-none text-white mix-blend-difference">
+
+            <span class="font-bold">14:30</span>
+
+            <div class="flex space-x-2">
+
+                <i class="fas fa-signal"></i> <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i>
+
+            </div>
+
+        </div>
+
+ 
+
+        <div id="page-home" class="page active bg-gradient-to-b from-[#6419a3] via-[#c74c86] to-[#fce4ec]">
+
+            
+
+            <div class="px-4 py-2 flex justify-between items-center text-white relative z-20 mt-2">
+
+                <i class="fas fa-chevron-left text-xl"></i>
+
+                <div class="flex items-center bg-black/20 rounded-full px-1 py-1 border border-white/10">
+
+                    <button class="px-4 py-1 bg-white/20 rounded-full text-[11px] font-black">好物夺宝</button>
+
+                    <button class="px-4 py-1 text-[11px] opacity-60">现金夺宝</button>
+
+                </div>
+
+                <div class="flex space-x-4 items-center">
+
+                    <button onclick="switchPage('page-profile')" class="hover:opacity-80 transition-opacity"><i class="fas fa-user-circle text-2xl"></i></button>
+
+                    <button onclick="toggleModal('modal-rules')"><i class="fas fa-info-circle text-lg"></i></button>
+
+                </div>
+
+            </div>
+
+ 
+
+            <div class="flex-1 overflow-y-auto hide-scrollbar pb-10 relative z-10">
+
+                <div class="text-center py-6 px-4">
+
+                    <div class="inline-flex items-center bg-black/30 rounded-full px-3 py-1 text-white text-[10px] mb-4 backdrop-blur-md">
+
+                        <span class="bg-red-500 w-2 h-2 rounded-full mr-2 animate-pulse"></span>
+
+                        <span>用户 159*** 刚刚夺得【Au999金条】</span>
+
+                    </div>
+
+                    <h1 class="text-3xl font-black text-white italic tracking-tighter mb-1" style="text-shadow: 2px 2px 0px #9d174d;">用闲鱼币抢夺万元大宝</h1>
+
+                    <p class="text-white/70 text-[10px] italic">21:30准时开奖 · 公平透明可追溯</p>
+
+                </div>
+
+ 
+
+                <div class="grid grid-cols-2 gap-3 mx-4 mb-4">
+
+                    <div onclick="toggleModal('modal-reward')" class="bg-gradient-to-br from-white to-orange-50 rounded-[24px] p-3 shadow-lg border border-white/50 cursor-pointer active:scale-95 transition-transform">
+
+                        <h3 class="font-black text-gray-800 text-[12px] italic">累计夺宝赢好礼</h3>
+
+                        <p class="text-[9px] text-orange-500 font-bold mt-0.5 mb-3">当前 2 次 ></p>
+
+                        
+
+                        <div class="relative pt-2 pb-1 px-1">
+
+                            <div class="absolute top-3.5 left-0 right-0 h-1 bg-gray-200 rounded-full"></div>
+
+                            <div class="absolute top-3.5 left-0 w-[15%] h-1 bg-orange-500 rounded-full"></div>
+
+                            <div class="flex justify-between relative">
+
+                                <div class="flex flex-col items-center"><div class="w-3 h-3 rounded-full border-2 node-active"></div><span class="text-[7px] mt-1 font-bold text-gray-600">1</span></div>
+
+                                <div class="flex flex-col items-center"><div class="w-3 h-3 rounded-full border-2 node-inactive"></div><span class="text-[7px] mt-1 font-bold text-gray-400">3</span></div>
+
+                                <div class="flex flex-col items-center"><div class="w-3 h-3 rounded-full border-2 node-inactive"></div><span class="text-[7px] mt-1 font-bold text-gray-400">5</span></div>
+
+                                <div class="flex flex-col items-center"><div class="w-3 h-3 rounded-full border-2 node-inactive"></div><span class="text-[7px] mt-1 font-bold text-gray-400">8</span></div>
+
+                                <div class="flex flex-col items-center"><div class="w-3 h-3 rounded-full border-2 node-inactive"></div><span class="text-[7px] mt-1 font-bold text-gray-400">16</span></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    
+
+                    <div class="bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] rounded-[24px] p-3 shadow-lg border border-white/10 cursor-pointer active:scale-95 transition-transform flex flex-col justify-between">
+
+                        <div class="text-white">
+
+                            <h3 class="font-black text-[12px] italic">赢百万闲鱼币</h3>
+
+                            <p class="text-[9px] opacity-80 mt-0.5">任务必得 ></p>
+
+                        </div>
+
+                        <div class="flex items-center space-x-2 mt-4">
+
+                            <div class="flex-1 h-1 bg-white/20 rounded-full overflow-hidden"><div class="w-[60%] h-full bg-yellow-400"></div></div>
+
+                            <i class="fas fa-coins text-yellow-400 text-xs animate-bounce"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+ 
+
+                <div class="mx-4 mb-6 bg-gradient-to-r from-[#FF512F] to-[#DD2476] rounded-2xl p-4 shadow-lg flex justify-between items-center cursor-pointer" onclick="toggleModal('modal-team')">
+
+                    <div class="text-white">
+
+                        <h3 class="font-black text-sm italic"><i class="fas fa-users mr-2"></i> 组队夺宝：翻倍概率</h3>
+
+                        <p class="text-[9px] opacity-80 mt-1">三人成团，一人中奖全员享副奖</p>
+
+                    </div>
+
+                    <button class="bg-white text-[#DD2476] font-black text-[10px] px-3 py-1.5 rounded-full shadow-md">去组队</button>
+
+                </div>
+
+ 
+
+                <div class="flex px-4 space-x-1 mb-2">
+
+                    <button onclick="switchPool('normal')" id="tab-normal" class="flex-1 py-3 bg-white/30 rounded-t-2xl text-[11px] font-black text-white/70 transition-all">普通夺宝池</button>
+
+                    <button onclick="switchPool('super')" id="tab-super" class="flex-1 py-3 bg-white/30 rounded-t-2xl text-[11px] font-black text-white/70 tab-active transition-all">超级夺宝池</button>
+
+                </div>
+
+ 
+
+                <div class="mx-2 p-2 glass-card rounded-2xl min-h-[400px] shadow-inner" id="pool-container">
+
+                    </div>
+
+            </div>
+
+        </div>
+
+ 
+
+        <div id="page-profile" class="page bg-gray-50">
+
+            <div class="px-4 py-4 flex items-center bg-white border-b border-gray-100 mt-8">
+
+                <button onclick="switchPage('page-home')" class="w-10 text-xl"><i class="fas fa-chevron-left"></i></button>
+
+                <h2 class="flex-1 text-center font-black text-gray-800">我参与的好物夺宝</h2>
+
+                <div class="w-10"></div>
+
+            </div>
+
+            
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-4">
+
+                <div class="bg-white p-4 rounded-3xl shadow-sm flex border border-gray-100">
+
+                    <img src="https://images.unsplash.com/photo-1599643478524-fb66f70a9a51?w=200" class="w-20 h-20 rounded-2xl object-contain">
+
+                    <div class="ml-4 flex-1 flex flex-col justify-between">
+
+                        <h4 class="text-sm font-bold text-gray-800 line-clamp-2">老凤祥S925四叶草项链礼盒装</h4>
+
+                        <div class="flex justify-between items-end">
+
+                            <span class="text-xs text-red-500 font-black">夺宝未成功</span>
+
+                            <span class="text-[10px] text-gray-400 italic">昨天 21:30公布</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="bg-white p-4 rounded-3xl shadow-sm flex border border-gray-100 opacity-60">
+
+                    <img src="https://images.unsplash.com/photo-1610375461246-83df859d849d?w=200" class="w-20 h-20 rounded-2xl object-contain">
+
+                    <div class="ml-4 flex-1 flex flex-col justify-between">
+
+                        <h4 class="text-sm font-bold text-gray-800 line-clamp-2">中国黄金 Au999 1g 纪念金条</h4>
+
+                        <div class="flex justify-between items-end">
+
+                            <span class="text-xs text-red-500 font-black">夺宝未成功</span>
+
+                            <span class="text-[10px] text-gray-400 italic">2026.03.22 公布</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+ 
+
+        <div id="modal-rules" class="modal items-end justify-center">
+
+            <div class="bg-white rounded-t-[40px] w-full h-[80%] p-8 overflow-y-auto relative shadow-2xl">
+
+                <button onclick="toggleModal('modal-rules')" class="absolute top-6 right-6 text-gray-300"><i class="fas fa-times-circle text-2xl"></i></button>
+
+                <h2 class="font-black text-2xl mb-6 text-gray-800 italic">夺宝公平开奖规则</h2>
+
+                <div class="space-y-6 text-[11px] text-gray-500 leading-relaxed">
+
+                    <section>
+
+                        <h4 class="font-black text-gray-800 text-sm mb-2 text-rose-500">计算公式</h4>
+
+                        <div class="bg-zinc-50 p-4 rounded-2xl font-mono text-gray-700 border border-gray-100 shadow-inner">
+
+                            中奖号码 = [(数值A * 数值B) / 该宝物夺宝参与人数] 取余数 + 10000001
+
+                        </div>
+
+                        <p class="mt-3">
+
+                            <span class="font-bold">数值A：</span>最后一名用户参与时间的时分秒毫秒合成（如202233123）。<br>
+
+                            <span class="font-bold">数值B：</span>当天体彩排列五开奖号码（如51234）。
+
+                        </p>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </div>
+
+ 
+
+        <div id="modal-reward" class="modal items-center justify-center p-6">
+
+            <div class="bg-white rounded-[40px] w-full max-h-[75%] overflow-hidden flex flex-col p-6 relative">
+
+                <button onclick="toggleModal('modal-reward')" class="absolute top-4 right-4 text-gray-400 z-10"><i class="fas fa-times-circle text-xl"></i></button>
+
+                <h2 class="text-center font-black text-gray-800 text-xl mb-2 italic">夺宝进阶：累计赢好礼</h2>
+
+                <p class="text-center text-[10px] text-gray-400 mb-6">当前已累计参与 <span class="text-orange-500 font-bold">2</span> 次夺宝</p>
+
+                
+
+                <div class="flex-1 overflow-y-auto hide-scrollbar space-y-3">
+
+                    <div class="bg-green-50 p-4 rounded-3xl flex items-center border border-green-100">
+
+                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-orange-500 mr-3 shadow-sm font-bold">1</div>
+
+                        <div class="flex-1">
+
+                            <p class="font-black text-sm italic">累计参与 1 次</p>
+
+                            <p class="text-[10px] text-green-600">奖励：50 闲鱼币 (已领)</p>
+
+                        </div>
+
+                        <i class="fas fa-check-circle text-green-500"></i>
+
+                    </div>
+
+                    <div class="bg-orange-50 p-4 rounded-3xl flex items-center border-2 border-orange-200 relative">
+
+                        <span class="absolute -top-2 left-4 bg-orange-500 text-white text-[8px] px-2 rounded-full font-bold">下个目标</span>
+
+                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-orange-500 mr-3 shadow-sm font-bold">3</div>
+
+                        <div class="flex-1">
+
+                            <p class="font-black text-sm italic">累计参与 3 次</p>
+
+                            <p class="text-[10px] text-orange-600">奖励：80 闲鱼币</p>
+
+                        </div>
+
+                        <span class="text-[10px] font-black text-orange-600">进度 2/3</span>
+
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-3xl flex items-center border border-gray-100 opacity-60">
+
+                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-blue-500 mr-3 shadow-sm font-bold">5</div>
+
+                        <div class="flex-1"><p class="font-black text-sm italic">累计 5 次</p><p class="text-[10px] text-gray-400">奖励：专属【夺宝达人】勋章</p></div>
+
+                        <i class="fas fa-lock text-gray-300"></i>
+
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-3xl flex items-center border border-gray-100 opacity-60">
+
+                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-purple-500 mr-3 shadow-sm font-bold">8</div>
+
+                        <div class="flex-1"><p class="font-black text-sm italic">累计 8 次</p><p class="text-[10px] text-gray-400">奖励：闲鱼币加速套件(7天)</p></div>
+
+                        <i class="fas fa-lock text-gray-300"></i>
+
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-3xl flex items-center border border-gray-100 opacity-60">
+
+                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-yellow-600 mr-3 shadow-sm font-bold">16</div>
+
+                        <div class="flex-1"><p class="font-black text-sm italic">累计 16 次</p><p class="text-[10px] text-gray-400">奖励：终极【夺宝传说】皮肤</p></div>
+
+                        <i class="fas fa-lock text-gray-300"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+ 
+
+        <div id="modal-team" class="modal items-center justify-center p-6">
+
+            <div class="bg-white rounded-[40px] w-full p-8 relative shadow-2xl">
+
+                <button onclick="toggleModal('modal-team')" class="absolute top-6 right-6 text-gray-300"><i class="fas fa-times-circle text-xl"></i></button>
+
+                <h2 class="text-center font-black text-rose-500 text-2xl mb-2 italic">组队夺宝</h2>
+
+                <p class="text-center text-[10px] text-gray-400 mb-8 italic">三人成团，一人中奖全员享附赠礼</p>
+
+                <div class="flex justify-around mb-8 px-4">
+
+                    <div class="flex flex-col items-center"><div class="w-16 h-16 rounded-full border-2 border-rose-500 p-1"><img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100" class="w-full h-full rounded-full object-cover"></div><span class="text-[11px] mt-2 font-black italic">王大锤</span></div>
+
+                    <div class="flex flex-col items-center"><div class="w-16 h-16 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-200 text-xl"><i class="fas fa-plus"></i></div><span class="text-[10px] mt-2 text-gray-300 italic">待邀请</span></div>
+
+                    <div class="flex flex-col items-center"><div class="w-16 h-16 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-200 text-xl"><i class="fas fa-plus"></i></div><span class="text-[10px] mt-2 text-gray-300 italic">待邀请</span></div>
+
+                </div>
+
+                <button class="w-full bg-rose-500 text-white font-black py-4 rounded-full shadow-lg">邀请好友加入</button>
+
+            </div>
+
+        </div>
+
+ 
+
+    </div>
+
+ 
+
+    <script>
+
+        const poolData = {
+
+            normal: [
+
+                { title: "菊花电器 强力洗半自动洗衣机", price: "¥299", img: "https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=200", btn: "免费夺宝", tag: "新人专享", cost: "100 币/人次" },
+
+                { title: "康巴赫 304不锈钢蜂窝炒锅", price: "¥199", img: "https://images.unsplash.com/photo-1584990333939-c29aaadccf67?w=200", btn: "100币夺宝", tag: "厨房之选", cost: "100 币/人次" }
+
+            ],
+
+            super: [
+
+                { title: "老凤祥 S925四叶草项链礼盒装(附证书)", price: "¥1099", img: "https://images.unsplash.com/photo-1599643478524-fb66f70a9a51?w=200", btn: "200币夺宝", tag: "全网爆款", cost: "200 币/人次", progress: "已有 10.7w 人次参与" },
+
+                { title: "中国黄金 投资金条 1g 纪念款", price: "¥1188", img: "https://images.unsplash.com/photo-1610375461246-83df859d849d?w=200", btn: "200币夺宝", tag: "保值必选", cost: "200 币/人次", progress: "已有 2.2w 人次参与" }
+
+            ]
+
+        };
+
+ 
+
+        function switchPage(pageId) {
+
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+            document.getElementById(pageId).classList.add('active');
+
+        }
+
+ 
+
+        function toggleModal(id) {
+
+            document.getElementById(id).classList.toggle('active');
+
+        }
+
+ 
+
+        function switchPool(type) {
+
+            const container = document.getElementById('pool-container');
+
+            const btnNormal = document.getElementById('tab-normal');
+
+            const btnSuper = document.getElementById('tab-super');
+
+            
+
+            if(type === 'normal') {
+
+                btnNormal.classList.add('tab-active');
+
+                btnSuper.classList.remove('tab-active');
+
+            } else {
+
+                btnSuper.classList.add('tab-active');
+
+                btnNormal.classList.remove('tab-active');
+
+            }
+
+ 
+
+            container.innerHTML = poolData[type].map(item => `
+
+                <div class="bg-white rounded-[28px] p-4 mb-3 border border-gray-50 shadow-sm flex relative overflow-hidden active:scale-[0.98] transition-all">
+
+                    <div class="absolute top-0 left-0 bg-gradient-to-br from-rose-500 to-orange-500 text-white text-[9px] px-3 py-1 rounded-br-2xl font-black italic">${item.tag}</div>
+
+                    <div class="w-24 h-24 bg-gray-50 rounded-2xl flex-shrink-0 flex items-center justify-center p-2 mt-2">
+
+                        <img src="${item.img}" class="object-contain h-full w-full">
+
+                    </div>
+
+                    <div class="ml-4 flex-1 flex flex-col justify-between mt-2">
+
+                        <div>
+
+                            <h4 class="text-xs font-black text-gray-800 leading-tight italic line-clamp-2">${item.title}</h4>
+
+                            <p class="text-rose-500 text-[11px] font-black mt-1">市场价 ${item.price}</p>
+
+                            ${item.progress ? `<p class="text-[8px] text-gray-400 mt-0.5">${item.progress}</p>` : ''}
+
+                        </div>
+
+                        <div class="flex justify-between items-end">
+
+                            <span class="text-[8px] text-gray-400">${item.cost}</span>
+
+                            <button class="bg-gradient-to-r from-rose-500 to-orange-500 text-white text-[10px] font-black px-4 py-2 rounded-full shadow-lg">${item.btn}</button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `).join('');
+
+        }
+
+ 
+
+        switchPool('super');
+
+    </script>
+
+</body>
+
+</html>
